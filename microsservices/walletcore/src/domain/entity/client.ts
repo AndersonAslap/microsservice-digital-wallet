@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { AggregateRoot } from "../worker/aggregate-root";
+import { DomainException } from "../worker/domain-exception";
 
 type ClientProps = {
     id?: string;
@@ -46,6 +47,7 @@ export class Client implements AggregateRoot {
     }
 
     validate(): void {
-        if (!this._name) throw new Error('Name is required');
+        if (!this._name) throw new DomainException('Name is required');
+        if (!this._email) throw new DomainException('Email is required');
     }
 }
