@@ -26,11 +26,6 @@ export class Transaction {
         this.validate();
     }
 
-    transfer() {
-        this._accountFrom.debit(this._amount);
-        this._accountTo.credit(this._amount);
-    }
-
     validate() {
         if (this._amount <= 0) throw new DomainException('Amount cannot be less or equal to zero');
     }

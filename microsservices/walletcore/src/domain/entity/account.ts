@@ -55,4 +55,8 @@ export class Account implements AggregateRoot {
         if (this._balancer < amount) throw new DomainException('Insufficient balance');
         this._balancer -= amount;
     }
+
+    hasSufficientBalance(amount:number): boolean {
+        return this._balancer >= amount;
+    }
 }

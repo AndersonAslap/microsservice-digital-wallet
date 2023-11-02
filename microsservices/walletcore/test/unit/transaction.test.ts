@@ -1,6 +1,7 @@
 import { Account } from "../../src/domain/entity/account"
 import { Client } from "../../src/domain/entity/client";
 import { Transaction } from "../../src/domain/entity/transaction";
+import { TransferDomainService } from "../../src/domain/services/transfer";
 
 test.each(
     [0, -100]
@@ -31,12 +32,7 @@ test("should make a transaction", () => {
     const accountTo = new Account({client: clientAccountTo});
     accountTo.credit(30);
     
-    const transaction = new Transaction({
-        accountFrom,
-        accountTo,
-        amount: 15
-    });
-    transaction.transfer(); 
+    const transaction = TransferDomainService.execute(accountFrom, accountTo, 15);
 
     expect(transaction._accountFrom.balancer).toBe(15);
     expect(transaction._accountTo.balancer).toBe(45);
