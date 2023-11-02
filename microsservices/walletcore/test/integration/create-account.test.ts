@@ -1,9 +1,13 @@
+import { faker } from '@faker-js/faker';
 import { AccountRepository } from "../../src/application/repository/account-repository";
 import { ClientRepository } from "../../src/application/repository/client-repository";
 import { CreateAccount } from "../../src/application/usecases/create-account";
 import { Client } from "../../src/domain/entity/client";
 
-const client = new Client({name: 'Anderson', email: 'anderson@dev.io'});
+const client = new Client({
+    name: faker.person.fullName(), 
+    email: faker.internet.email()
+});
 
 const clientRepositoryMock : ClientRepository = {
     save: jest.fn(),

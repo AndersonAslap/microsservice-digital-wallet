@@ -1,13 +1,21 @@
+import { faker } from '@faker-js/faker';
 import { AccountRepository } from "../../src/application/repository/account-repository";
 import { TransactionRepository } from "../../src/application/repository/transaction-repository";
 import { CreateTransaction } from "../../src/application/usecases/create-transaction";
 import { Account } from "../../src/domain/entity/account";
 import { Client } from "../../src/domain/entity/client";
 
-const clientAccountFrom = new Client({name: 'Anderson', email:'anderson@dev.io'});
+const clientAccountFrom = new Client({
+    name: faker.person.fullName(), 
+    email: faker.internet.email()
+});
 const accountFrom = new Account({ client: clientAccountFrom });
 accountFrom.credit(15);
-const clientAccountTo = new Client({name: 'Beatriz', email:'bia@dev.io'});
+
+const clientAccountTo = new Client({
+    name: faker.person.fullName(), 
+    email: faker.internet.email()
+});
 const accountTo = new Account({ client: clientAccountTo });
 
 const accountMap = {

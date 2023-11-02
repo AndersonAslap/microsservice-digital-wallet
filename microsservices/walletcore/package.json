@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx jest --watchAll"
+    "test": "npx jest --watchAll --detectOpenHandles "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^8.2.0",
     "@types/jest": "^29.5.7",
     "@types/node": "^20.8.10",
     "@types/uuid": "^9.0.6",

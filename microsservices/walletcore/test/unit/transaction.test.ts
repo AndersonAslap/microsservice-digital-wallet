@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { Account } from "../../src/domain/entity/account"
 import { Client } from "../../src/domain/entity/client";
 import { Transaction } from "../../src/domain/entity/transaction";
@@ -6,11 +7,17 @@ import { TransferDomainService } from "../../src/domain/services/transfer";
 test.each(
     [0, -100]
 )("should throw error when amount less or equal to zero", (amount: number) => {
-    const clientAccountFrom = new Client({name: 'Anderson', email: 'anderson@dev.io'});
+    const clientAccountFrom = new Client({
+        name: faker.person.fullName(), 
+        email: faker.internet.email()
+    });
     const accountFrom = new Account({client: clientAccountFrom});
     accountFrom.credit(30);
     
-    const clientAccountTo = new Client({name: 'Anderson', email: 'anderson@dev.io'});
+    const clientAccountTo = new Client({
+        name: faker.person.fullName(), 
+        email: faker.internet.email()
+    });
     const accountTo = new Account({client: clientAccountTo});
     accountTo.credit(30);
 
@@ -24,11 +31,17 @@ test.each(
 });
 
 test("should make a transaction", () => {
-    const clientAccountFrom = new Client({name: 'Anderson', email: 'anderson@dev.io'});
+    const clientAccountFrom = new Client({
+        name: faker.person.fullName(), 
+        email: faker.internet.email()
+    });
     const accountFrom = new Account({client: clientAccountFrom});
     accountFrom.credit(30);
     
-    const clientAccountTo = new Client({name: 'Anderson', email: 'anderson@dev.io'});
+    const clientAccountTo = new Client({
+        name: faker.person.fullName(), 
+        email: faker.internet.email()
+    });
     const accountTo = new Account({client: clientAccountTo});
     accountTo.credit(30);
     

@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { ClientRepository } from "../../src/application/repository/client-repository";
 import { CreateClient } from "../../src/application/usecases/create-client";
 
@@ -10,12 +11,12 @@ test("should create a client", async () => {
     const clientRepository = clientRepositoryMock;
     const usecase = new CreateClient(clientRepository);
     const input = {
-        name: 'Anderson',
-        email: 'anderson@dev.io'
+        name: faker.person.fullName(),
+        email: faker.internet.email()
     }
     const output = await usecase.execute(input);
     expect(output.id).toBeDefined();
-    expect(output.name).toBe('Anderson');
-    expect(output.email).toBe('anderson@dev.io');
+    expect(output.name).toBe(input.name);
+    expect(output.email).toBe(input.email);
     expect(clientRepository.save).toHaveBeenCalled();
 });
