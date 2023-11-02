@@ -10,12 +10,6 @@ type AccountProps = {
     updatedAt?: Date;
 }
 
-type Operations = {
-    type: 'withdraw' | 'deposit',
-    amount: number,
-    createdAt: Date
-}
-
 export class Account implements AggregateRoot {
     private _id: string;
     private _client: Client;
@@ -51,8 +45,14 @@ export class Account implements AggregateRoot {
         return this._updatedAt;
     }
 
-    deposit(amount: number) {
+    credit(amount: number) {
         if (amount <= 0) throw new DomainException('Amount cannot be less or equal to zero');
         this._balancer += amount;
+    }
+
+    debit(amount: number) {
+        if (amount <= 0) throw new DomainException('Amount cannot be less or equal to zero');
+        if (this._balancer < amount) throw new DomainException('Insufficient balance');
+        this._balancer -= amount;
     }
 }
