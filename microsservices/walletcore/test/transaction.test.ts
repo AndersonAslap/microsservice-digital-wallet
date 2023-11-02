@@ -38,6 +38,6 @@ test("should make a transaction", () => {
     });
     transaction.transfer(); 
 
-    expect(accountFrom.balancer).toBe(15);
-    expect(accountTo.balancer).toBe(45);
+    expect(transaction._accountFrom.balancer).toBe(15);
+    expect(transaction._accountTo.balancer).toBe(45);
 })
