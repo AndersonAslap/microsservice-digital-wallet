@@ -30,7 +30,7 @@ export class ClientRepositoryDatabase implements ClientRepository {
         try {
             await this.connection.query(
                 "insert into clients (id, name, email, created_at, updated_at) values ($1, $2, $3, $4, $5)", 
-                [client.id, client.name, client.email, new Date(client.createdAt), new Date(client.updatedAt)]
+                [client.id, client.name, client.email, client.createdAt, client.updatedAt]
             );
         } catch (error) {
             console.log(error);
