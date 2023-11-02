@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { AggregateRoot } from "../worker/aggregate-root";
 import { Client } from "./client";
+import { DomainException } from "../worker/domain-exception";
 
 type AccountProps = {
     id?: string;
@@ -48,5 +49,10 @@ export class Account implements AggregateRoot {
 
     get updatedAt(): Date {
         return this._updatedAt;
+    }
+
+    deposit(amount: number) {
+        if (amount <= 0) throw new DomainException('Amount cannot be less or equal to zero');
+        this._balancer += amount;
     }
 }
