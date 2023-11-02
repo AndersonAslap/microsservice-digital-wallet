@@ -9,7 +9,7 @@ test("should throw error when name is empty", () => {
 test("should throw error when email is empty", () => {
     expect(
         () => new Client({name: 'Anderson', email: ''})
-    ).toThrow('Email is required')
+    ).toThrow('Email is required');
 });
 
 test("should create a client", () => {
