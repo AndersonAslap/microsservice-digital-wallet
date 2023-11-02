@@ -1,6 +1,6 @@
-import { Account } from "../src/domain/entity/account"
-import { Client } from "../src/domain/entity/client";
-import { Transaction } from "../src/domain/entity/transaction";
+import { Account } from "../../src/domain/entity/account"
+import { Client } from "../../src/domain/entity/client";
+import { Transaction } from "../../src/domain/entity/transaction";
 
 test.each(
     [0, -100]

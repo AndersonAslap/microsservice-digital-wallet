@@ -1,5 +1,5 @@
-import { Account } from "../src/domain/entity/account";
-import { Client } from "../src/domain/entity/client";
+import { Account } from "../../src/domain/entity/account";
+import { Client } from "../../src/domain/entity/client";
 
 test("should create account", () => {
     const client = new Client({name: 'Anderson', email:'anderson@dev.io'});

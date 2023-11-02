@@ -1,4 +1,4 @@
-import { Client } from "../src/domain/entity/client";
+import { Client } from "../../src/domain/entity/client";
 
 test("should throw error when name is empty", () => {
     expect(
