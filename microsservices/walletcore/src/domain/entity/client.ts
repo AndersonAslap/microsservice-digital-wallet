@@ -22,6 +22,7 @@ export class Client implements AggregateRoot {
         this._email = props.email;
         this._createdAt = props.createdAt || new Date();
         this._updatedAt = props.updatedAt || new Date();
+        this.validate();
     }
 
     get id(): string {
@@ -42,5 +43,9 @@ export class Client implements AggregateRoot {
 
     get updatedAt(): Date {
         return this._updatedAt;
+    }
+
+    validate(): void {
+        if (!this._name) throw new Error('Name is required');
     }
 }
