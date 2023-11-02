@@ -46,6 +46,13 @@ export class Client implements AggregateRoot {
         return this._updatedAt;
     }
 
+    update(name: string, email?: string): void {
+        this._name = name;
+        this._email = email || this._email;
+        this._updatedAt = new Date();
+        this.validate();
+    }
+
     validate(): void {
         if (!this._name) throw new DomainException('Name is required');
         if (!this._email) throw new DomainException('Email is required');
