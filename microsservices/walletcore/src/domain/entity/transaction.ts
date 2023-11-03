@@ -26,6 +26,10 @@ export class Transaction {
         this.validate();
     }
 
+    get id(): string {
+        return this._id;
+    }
+
     validate() {
         if (this._amount <= 0) throw new DomainException('Amount cannot be less or equal to zero');
     }
