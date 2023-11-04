@@ -5,8 +5,7 @@ export class TransactionCreatedEvent implements EventInterface{
     private _payload: any; 
     private _datetime: Date;
 
-    constructor(payload: any) {
-        this._payload = payload;
+    constructor() {
         this._datetime = new Date();
     }
 
@@ -20,5 +19,9 @@ export class TransactionCreatedEvent implements EventInterface{
     
     getPayload() {
         return this._payload;
+    }
+
+    setPayload(payload: any) {
+        this._payload = payload;
     }
 }

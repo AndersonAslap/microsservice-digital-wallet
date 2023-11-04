@@ -30,6 +30,18 @@ export class Transaction {
         return this._id;
     }
 
+    get accountFrom(): Account {
+        return this._accountFrom;
+    }
+
+    get accountTo(): Account {
+        return this._accountTo;
+    }
+
+    get amount(): number {
+        return this._amount;
+    }
+
     validate() {
         if (this._amount <= 0) throw new DomainException('Amount cannot be less or equal to zero');
     }
