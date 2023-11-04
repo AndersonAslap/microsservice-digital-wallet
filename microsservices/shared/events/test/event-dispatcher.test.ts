@@ -17,7 +17,9 @@ const event: EventInterface = {
             status: 'paid',
             email: 'anderson@gmail.com'
         }
-    }
+    }, 
+
+    setPayload(): void {}
 }
 
 const handler : HandlerInterface = {
