@@ -17,7 +17,7 @@ export class HttpControllerWalletCore {
             return output
         });
 
-        httpServer.on('post', '/transaction', async (params:any, body:any, headers:any) => {
+        httpServer.on('post', '/transactions', async (params:any, body:any, headers:any) => {
             const usecase = usecaseFactory.createTransactionUseCase();
             const output = await usecase.execute(body);
             return output

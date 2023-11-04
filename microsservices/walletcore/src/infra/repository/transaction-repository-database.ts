@@ -7,11 +7,11 @@ import { AppError } from "../error/app-error";
 
 export class TransactionRepositoryDatabase implements TransactionRepository {
     
-    constructor( readonly connection: DatabaseConnection ){}
+    constructor( readonly db: DatabaseConnection ){}
 
     async findById(id: string): Promise<Transaction> {
         try {
-            const [transactionData] = await this.connection.query('select * from transactions where id = $1', [id]);
+            const [transactionData] = await this.db.query('select * from transactions where id = $1', [id]);
             if (!transactionData) throw new AppError('Client does exists');            
             const accountFrom = await this.getAccount(transactionData.accountfrom_id);
             const accountTo = await this.getAccount(transactionData.accountto_id);
@@ -32,17 +32,21 @@ export class TransactionRepositoryDatabase implements TransactionRepository {
     
     async save(transaction: Transaction): Promise<void> {
         try {
-            await this.connection.query(
-                "insert into transactions (id, accountfrom_id, accountto_id, amount, created_at) values ($1, $2, $3, $4, $5)", 
-                [transaction.id, transaction._accountFrom.id, transaction._accountTo.id, transaction._amount, transaction._createdAt]
-            );
+            await this.db.transaction(
+                async db => {
+                    await db.query(
+                        "insert into transactions (id, accountfrom_id, accountto_id, amount, created_at) values ($1, $2, $3, $4, $5)", 
+                        [transaction.id, transaction._accountFrom.id, transaction._accountTo.id, transaction._amount, transaction._createdAt]
+                    );
+                }
+            );  
         } catch (error) {
             throw new Error('a problem occurred while running');
         }
     }
 
     private async getAccount(accountId: string) : Promise<Account>{
-        const [accountData] = await this.connection.query('select * from accounts where id = $1', [accountId]);
+        const [accountData] = await this.db.query('select * from accounts where id = $1', [accountId]);
         const client = await this.getClient(accountData.client_id);
         const account = new Account({ 
             id: accountData.id,
@@ -55,7 +59,7 @@ export class TransactionRepositoryDatabase implements TransactionRepository {
     }
 
     private async getClient(clientId: string) : Promise<Client> {
-        const [clientData] = await this.connection.query('select * from clients where id = $1', [clientId]);
+        const [clientData] = await this.db.query('select * from clients where id = $1', [clientId]);
         return new Client({
             id: clientData.id,
             name: clientData.name,

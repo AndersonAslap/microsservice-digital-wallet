@@ -48,12 +48,14 @@ export class Account implements AggregateRoot {
     credit(amount: number) {
         if (amount <= 0) throw new DomainException('Amount cannot be less or equal to zero');
         this._balancer += amount;
+        this._updatedAt = new Date();
     }
 
     debit(amount: number) {
         if (amount <= 0) throw new DomainException('Amount cannot be less or equal to zero');
         if (this._balancer < amount) throw new DomainException('Insufficient balance');
         this._balancer -= amount;
+        this._updatedAt = new Date();
     }
 
     hasSufficientBalance(amount:number): boolean {
