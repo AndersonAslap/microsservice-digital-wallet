@@ -1,4 +1,4 @@
-export interface Event {
+export interface EventInterface {
     getName(): string
     getDateTime(): Date 
     getPayload(): any
