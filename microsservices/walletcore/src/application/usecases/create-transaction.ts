@@ -1,13 +1,16 @@
-import { Transaction } from "../../domain/entity/transaction";
 import { TransferDomainService } from "../../domain/services/transfer";
 import { AccountRepository } from "../repository/account-repository";
 import { TransactionRepository } from "../repository/transaction-repository";
+import { EventDispatcherInterface } from "../../../../shared/events/src/interfaces/event-dispatcher";
+import { EventInterface } from "../../../../shared/events/src/interfaces/event";
 
 export class CreateTransaction {
 
     constructor(
         readonly accountRepository: AccountRepository, 
-        readonly transactionRepository: TransactionRepository
+        readonly transactionRepository: TransactionRepository,
+        readonly eventDispatcher: EventDispatcherInterface,
+        readonly transactionCreatedEvent: EventInterface
     ) {}
 
     async execute(input: Input): Promise<Output> {
@@ -15,6 +18,7 @@ export class CreateTransaction {
         const accountTo = await this.accountRepository.findById(input.accountToId);
         const transaction = TransferDomainService.execute(accountFrom, accountTo, input.amount);
         await this.transactionRepository.save(transaction);
+        this.eventDispatcher.dispatch(this.transactionCreatedEvent);
         return {
             id: transaction._id
         }
