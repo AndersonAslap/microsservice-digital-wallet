@@ -12,7 +12,7 @@ export class CreateAccount {
     async execute(input: Input): Promise<Output> {
         const client = await this.clientRepository.findById(input.clientId);
         if (!client) throw new Error('Client does not exists');
-        const account = new Account({client});
+        const account = new Account({clientId: client.id});
         await this.accountRepository.save(account);
         return {
             id: account.id

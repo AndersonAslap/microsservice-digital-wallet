@@ -8,8 +8,8 @@ export class TransferDomainService {
         if (amount <= 0) throw new DomainException('Amount must be greater than zero');
         if (!accountFrom.hasSufficientBalance(amount)) throw new DomainException('Insufficient balance');
         const transaction = new Transaction({
-            accountFrom,
-            accountTo,
+            accountFromId: accountFrom.id,
+            accountToId: accountTo.id,
             amount
         });
         accountFrom.debit(amount);

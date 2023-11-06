@@ -1,7 +1,6 @@
 import { DataSource, Repository} from "typeorm";
 import { ClientRepository } from "../../application/repository/client-repository";
 import { Client } from "../../domain/entity/client";
-import { AppError } from "../error/app-error";
 import { ClientEntityOrm } from "../database/postgres/orm/entity/Client";
 
 export class ClientRepositoryDatabase implements ClientRepository {

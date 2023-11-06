@@ -1,25 +1,24 @@
 import { v4 as uuid } from "uuid";
 import { AggregateRoot } from "../worker/aggregate-root";
-import { Client } from "./client";
 import { DomainException } from "../worker/domain-exception";
 
 type AccountProps = {
     id?: string;
-    client: Client;
+    clientId: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 export class Account implements AggregateRoot {
     private _id: string;
-    private _client: Client;
+    private _clientId: string;
     private _balancer: number;
     private _createdAt: Date;
     private _updatedAt: Date;
 
     constructor(props: AccountProps) {
         this._id = props.id || uuid();
-        this._client = props.client;
+        this._clientId = props.clientId;
         this._balancer = 0;
         this._createdAt = props.createdAt || new Date();
         this._updatedAt = props.updatedAt || new Date();
@@ -29,8 +28,8 @@ export class Account implements AggregateRoot {
         return this._id;
     }
 
-    get client(): Client {
-        return this._client;
+    get clientId(): string {
+        return this._clientId;
     }
 
     get balancer(): number {

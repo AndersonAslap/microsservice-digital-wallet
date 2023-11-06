@@ -17,8 +17,8 @@ export class CreateTransaction {
         const accountFrom = await this.accountRepository.findById(input.accountFromId);
         const accountTo = await this.accountRepository.findById(input.accountToId);
         const transaction = TransferDomainService.execute(accountFrom, accountTo, input.amount);
-        await this.accountRepository.updateBalance(transaction.accountFrom);
-        await this.accountRepository.updateBalance(transaction.accountTo);
+        await this.accountRepository.updateBalance(accountFrom);
+        await this.accountRepository.updateBalance(accountTo);
         await this.transactionRepository.save(transaction);
         this.transactionCreatedEvent.setPayload(transaction);
         this.eventDispatcher.dispatch(this.transactionCreatedEvent);

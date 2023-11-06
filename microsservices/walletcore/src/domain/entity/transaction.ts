@@ -1,26 +1,25 @@
 import { v4 as uuid } from "uuid";
-import { Account } from "./account"
 import { DomainException } from "../worker/domain-exception";
 
 type TransactionProps = {
     id?: string;
-    accountFrom: Account;
-    accountTo: Account;
+    accountFromId: string;
+    accountToId: string;
     amount: number;
     createdAt?: Date;
 }
 
 export class Transaction {
     private _id: string;
-    private _accountFrom: Account;
-    private _accountTo: Account;
+    private _accountFromId: string;
+    private _accountToId: string;
     private _amount: number
     private _createdAt: Date;
 
     constructor(props: TransactionProps) {
         this._id = props.id || uuid();
-        this._accountFrom = props.accountFrom;
-        this._accountTo = props.accountTo;
+        this._accountFromId = props.accountFromId;
+        this._accountToId = props.accountToId;
         this._amount = props.amount;
         this._createdAt = props.createdAt || new Date();
         this.validate();
@@ -30,12 +29,12 @@ export class Transaction {
         return this._id;
     }
 
-    get accountFrom(): Account {
-        return this._accountFrom;
+    get accountFromId(): string {
+        return this._accountFromId;
     }
 
-    get accountTo(): Account {
-        return this._accountTo;
+    get accountToId(): string {
+        return this._accountToId;
     }
 
     get amount(): number {

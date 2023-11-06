@@ -1,8 +1,6 @@
 import { DataSource, Repository } from "typeorm";
 import { AccountRepository } from "../../application/repository/account-repository";
 import { Account } from "../../domain/entity/account";
-import { Client } from "../../domain/entity/client";
-import { AppError } from "../error/app-error";
 import { AccountEntityOrm } from "../database/postgres/orm/entity/Account";
 
 export class AccountRepositoryDatabase implements AccountRepository {
@@ -19,13 +17,7 @@ export class AccountRepositoryDatabase implements AccountRepository {
         }); 
         const account = new Account({
             id: accountData._id,
-            client: new Client({
-                id: accountData.client._id,
-                name: accountData.client.name,
-                email: accountData.client.email,
-                createdAt: accountData.client.createdAt,
-                updatedAt: accountData.client.updatedAt,
-            }),
+            clientId: accountData.client_id,
             createdAt: accountData.createdAt,
             updatedAt: accountData.updatedAt
         });
@@ -41,7 +33,7 @@ export class AccountRepositoryDatabase implements AccountRepository {
     async save(account: Account): Promise<void> {
         await this.repository.save({
             _id: account.id,
-            client_id: account.client.id,
+            client_id: account.clientId,
             balance: account.balancer,
             createdAt: account.createdAt,
             updatedAt: account.updatedAt
