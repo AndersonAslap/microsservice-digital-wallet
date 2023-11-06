@@ -1,40 +1,34 @@
+import { DataSource, Repository} from "typeorm";
 import { ClientRepository } from "../../application/repository/client-repository";
 import { Client } from "../../domain/entity/client";
-import { DatabaseConnection } from "../database/database-connection";
 import { AppError } from "../error/app-error";
+import { ClientEntityOrm } from "../database/postgres/orm/entity/Client";
 
 export class ClientRepositoryDatabase implements ClientRepository {
+    private repository: Repository<ClientEntityOrm>
 
-    constructor(readonly connection: DatabaseConnection) {}
+    constructor(appDataSource: DataSource) {
+        this.repository = appDataSource.getRepository(ClientEntityOrm);
+    }
     
     async findById(id: string): Promise<Client> {
-        try {
-            const [clientData] = await this.connection.query('select * from clients where id = $1', [id]);
-            if (!clientData) throw new AppError('Client not found');
-            return new Client({
-                id: clientData.id,
-                name: clientData.name,
-                email: clientData.email,
-                createdAt: clientData.created_at,
-                updatedAt: clientData.updated_at
-            });
-        } catch (error) {
-            if (error instanceof AppError) {
-                throw error;
-            }
-            throw new Error('a problem occurred while running');
-        }
+        const clientData = await this.repository.findOne({ where: { _id: id } }); 
+        return new Client({
+            id: clientData._id,
+            name: clientData.name,
+            email: clientData.email,
+            createdAt: clientData.createdAt,
+            updatedAt: clientData.updatedAt
+        });
     }
 
     async save(client: Client): Promise<void> {
-        try {
-            await this.connection.query(
-                "insert into clients (id, name, email, created_at, updated_at) values ($1, $2, $3, $4, $5)", 
-                [client.id, client.name, client.email, client.createdAt, client.updatedAt]
-            );
-        } catch (error) {
-            console.log(error);
-            throw new Error('a problem occurred while running');
-        }
+        await this.repository.save({
+            _id: client.id,
+            name: client.name,
+            email: client.email,
+            createdAt: client.createdAt,
+            updatedAt: client.updatedAt
+        });
     }
 }

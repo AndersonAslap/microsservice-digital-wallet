@@ -8,7 +8,10 @@ import { RepositoryFactory } from "./repository-factory";
 
 export class UsecaseFactory implements UsecaseFactoryInterface {
 
-    constructor(readonly repositoryFactory: RepositoryFactory, readonly eventDispatcher: EventDispatcher) {}
+    constructor(
+        readonly repositoryFactory: RepositoryFactory, 
+        readonly eventDispatcher: EventDispatcher,
+    ) {}
     
     createClientUseCase(): CreateClient {
         return new CreateClient(this.repositoryFactory.createClientRepository());

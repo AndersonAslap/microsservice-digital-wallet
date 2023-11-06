@@ -11,11 +11,11 @@ type TransactionProps = {
 }
 
 export class Transaction {
-    readonly _id: string;
-    readonly _accountFrom: Account;
-    readonly _accountTo: Account;
-    readonly _amount: number
-    readonly _createdAt: Date;
+    private _id: string;
+    private _accountFrom: Account;
+    private _accountTo: Account;
+    private _amount: number
+    private _createdAt: Date;
 
     constructor(props: TransactionProps) {
         this._id = props.id || uuid();
@@ -40,6 +40,10 @@ export class Transaction {
 
     get amount(): number {
         return this._amount;
+    }
+
+    get createAt(): Date {
+        return this._createdAt;
     }
 
     validate() {

@@ -1,70 +1,59 @@
+import { DataSource, Repository } from "typeorm";
 import { AccountRepository } from "../../application/repository/account-repository";
 import { Account } from "../../domain/entity/account";
 import { Client } from "../../domain/entity/client";
-import { DatabaseConnection } from "../database/database-connection";
 import { AppError } from "../error/app-error";
+import { AccountEntityOrm } from "../database/postgres/orm/entity/Account";
 
 export class AccountRepositoryDatabase implements AccountRepository {
-    constructor(readonly db: DatabaseConnection) {}
+    private repository: Repository<AccountEntityOrm>;
+
+    constructor(appDataSource: DataSource) {
+        this.repository = appDataSource.getRepository(AccountEntityOrm);
+    }
 
     async findById(id: string): Promise<Account> {
-        try {
-            const [accountData] = await this.db.query("select * from accounts where id = $1", [id]);
-            if (!accountData) throw new AppError('Account not found');
-            const client = await this.getClientById(accountData.client_id);
-            const account = new Account({
-                id: accountData.id,
-                client,
-                createdAt: accountData.createdAt,
-                updatedAt: accountData.updatedAt
-            })
-            if (parseInt(accountData.balancer) > 0) {
-                account.credit(parseInt(accountData.balancer));
-            }
-            return account;
-        } catch (error) {
-            if (error instanceof AppError) {
-                throw error;
-            }
-            throw new Error('a problem occurred while running');
+        const accountData = await this.repository.findOne({ 
+            where: { _id: id }, 
+            relations: ['client'] 
+        }); 
+        const account = new Account({
+            id: accountData._id,
+            client: new Client({
+                id: accountData.client._id,
+                name: accountData.client.name,
+                email: accountData.client.email,
+                createdAt: accountData.client.createdAt,
+                updatedAt: accountData.client.updatedAt,
+            }),
+            createdAt: accountData.createdAt,
+            updatedAt: accountData.updatedAt
+        });
+        let balancer = typeof accountData.balance === "number" 
+            ? accountData.balance
+            : parseInt(accountData.balance)
+        if (balancer > 0) {
+            account.credit(balancer);
         }
+        return account;
     }
 
     async save(account: Account): Promise<void> {
-        try {
-            await this.db.transaction(
-                async db => {
-                    await db.query(
-                        "insert into accounts (id, client_id, balancer, created_at, updated_at) values ($1, $2, $3, $4, $5)", 
-                        [account.id, account.client.id, account.balancer, account.createdAt, account.updatedAt]
-                    );
-                }
-            );
-        } catch (error) {
-            throw new Error('a problem occurred while running');
-        }
-    }
-
-    async updateBalance(account: Account): Promise<void> {
-        try {
-            await this.db.transaction(
-                async db => {
-                    await db.query(
-                        "update accounts set balancer = $1, updated_at = $2 where id = $3", 
-                        [account.balancer, account.updatedAt, account.id]
-                    );
-                }
-            );  
-        } catch (error) {
-            throw new Error('a problem occurred while running');
-        }
-    }
-
-    private async getClientById(id: string): Promise<Client> {
-        const [clientData] = await this.db.query("select * from clients where id = $1", [id]);
-        return new Client({
-            name: clientData.name,
-            email: clientData.email
+        await this.repository.save({
+            _id: account.id,
+            client_id: account.client.id,
+            balance: account.balancer,
+            createdAt: account.createdAt,
+            updatedAt: account.updatedAt
         });
+    }
+
+    async updateBalance(account: Account): Promise<void> {        
+        await this.repository
+            .createQueryBuilder()
+            .update('accounts')
+            .set({ balance: account.balancer })
+            .where("_id = :id", {id: account.id})
+            .execute();
     }
 }
