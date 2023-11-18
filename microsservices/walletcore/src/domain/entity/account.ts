@@ -45,7 +45,7 @@ export class Account implements AggregateRoot {
     }
 
     credit(amount: number) {
-        if (amount <= 0) throw new DomainException('Amount cannot be less or equal to zero');
+        if (amount < 0) throw new DomainException('Amount cannot be less or equal to zero');
         this._balancer +=  amount;
         this._updatedAt = new Date();
     }

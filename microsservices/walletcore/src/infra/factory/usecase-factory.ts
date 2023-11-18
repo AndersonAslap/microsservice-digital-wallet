@@ -6,11 +6,13 @@ import { CreateClient } from "../../application/usecases/create-client";
 import { CreateTransaction } from "../../application/usecases/create-transaction";
 import { TransactionCreatedEvent } from "../../domain/events/transaction/transaction-created-event";
 import { RepositoryFactory } from "./repository-factory";
+import { MapperFactory } from "./mapper-factory";
 
 export class UsecaseFactory implements UsecaseFactoryInterface {
 
     constructor(
         readonly repositoryFactory: RepositoryFactory, 
+        readonly mapperFactory: MapperFactory,
         readonly eventDispatcher: EventDispatcher,
         readonly dataSource: DataSource
     ) {}
@@ -30,6 +32,7 @@ export class UsecaseFactory implements UsecaseFactoryInterface {
         return new CreateTransaction(
             this.repositoryFactory.createAccountRepository(),
             this.repositoryFactory.createTransactionRepository(),
+            this.mapperFactory,
             this.eventDispatcher,
             new TransactionCreatedEvent(),
             this.dataSource

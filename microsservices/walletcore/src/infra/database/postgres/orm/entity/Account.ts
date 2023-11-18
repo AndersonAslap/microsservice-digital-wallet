@@ -1,6 +1,5 @@
 import { Entity, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, PrimaryColumn } from "typeorm";
 import { ClientEntityOrm } from "./Client";
-import { Account } from "../../../../../domain/entity/account";
 
 @Entity("accounts")
 export class AccountEntityOrm {
@@ -23,15 +22,4 @@ export class AccountEntityOrm {
     @OneToOne(() => ClientEntityOrm, client => client.account)
     @JoinColumn({ name: 'client_id', referencedColumnName: 'id' })
     client: ClientEntityOrm;
-
-
-    static mapToAccountEntityOrm(account: Account): AccountEntityOrm {
-        const entity = new AccountEntityOrm();
-        entity.id = account.id;
-        entity.client_id = account.clientId;
-        entity.balance = account.balancer;
-        entity.createdAt = account.createdAt;
-        entity.updatedAt = account.updatedAt;
-        return entity;
-    }
 }

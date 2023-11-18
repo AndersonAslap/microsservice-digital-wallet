@@ -5,13 +5,15 @@ import { UsecaseFactory } from "./infra/factory/usecase-factory";
 import { ExpressAdapter } from "./infra/http/ExpressAdapter";
 import { HttpControllerWalletCore } from "./infra/http/HttpControllerWalletCore";
 import { AppDataSource } from "./infra/database/postgres/orm/data-source";
+import { MapperFactory } from "./infra/factory/mapper-factory";
 
 async function main() {
     try {
         const dataSource = await AppDataSource.initialize();
         const eventDispatcher = new EventDispatcher();
         const repositoryFactory = new RepositoryFactory(dataSource);
-        const usecaseFactory = new UsecaseFactory(repositoryFactory, eventDispatcher, dataSource);
+        const mapperFactory = new MapperFactory();
+        const usecaseFactory = new UsecaseFactory(repositoryFactory, mapperFactory, eventDispatcher, dataSource);
         const httpServer = new ExpressAdapter();
         new HttpControllerWalletCore(httpServer, usecaseFactory);
         httpServer.listen(3031);
