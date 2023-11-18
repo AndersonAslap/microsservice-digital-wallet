@@ -1,3 +1,4 @@
+import { DataSource } from "typeorm";
 import { EventDispatcher } from "../../../../shared/events/src/event-dispatcher";
 import { UsecaseFactoryInterface } from "../../application/factory/usecase-factory-interface";
 import { CreateAccount } from "../../application/usecases/create-account";
@@ -11,6 +12,7 @@ export class UsecaseFactory implements UsecaseFactoryInterface {
     constructor(
         readonly repositoryFactory: RepositoryFactory, 
         readonly eventDispatcher: EventDispatcher,
+        readonly dataSource: DataSource
     ) {}
     
     createClientUseCase(): CreateClient {
@@ -29,7 +31,8 @@ export class UsecaseFactory implements UsecaseFactoryInterface {
             this.repositoryFactory.createAccountRepository(),
             this.repositoryFactory.createTransactionRepository(),
             this.eventDispatcher,
-            new TransactionCreatedEvent()
+            new TransactionCreatedEvent(),
+            this.dataSource
         );
     }
 }

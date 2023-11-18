@@ -1,13 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne } from "typeorm";
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, OneToOne, PrimaryColumn } from "typeorm";
 import { AccountEntityOrm } from "./Account";
 
 @Entity("clients")
 export class ClientEntityOrm {
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column("uuid", { unique: true })
-    _id: string;
+    @PrimaryColumn("uuid", { unique: true })
+    id: string;
 
     @Column("varchar", { length: 255 })
     name: string;

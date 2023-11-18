@@ -1,4 +1,4 @@
-import { DataSource, Repository } from "typeorm";
+import { DataSource, In, Repository } from "typeorm";
 import { AccountRepository } from "../../application/repository/account-repository";
 import { Account } from "../../domain/entity/account";
 import { AccountEntityOrm } from "../database/postgres/orm/entity/Account";
@@ -12,27 +12,24 @@ export class AccountRepositoryDatabase implements AccountRepository {
 
     async findById(id: string): Promise<Account> {
         const accountData = await this.repository.findOne({ 
-            where: { _id: id }, 
-            relations: ['client'] 
+            where: { id }
         }); 
-        const account = new Account({
-            id: accountData._id,
-            clientId: accountData.client_id,
-            createdAt: accountData.createdAt,
-            updatedAt: accountData.updatedAt
-        });
-        let balancer = typeof accountData.balance === "number" 
-            ? accountData.balance
-            : parseInt(accountData.balance)
-        if (balancer > 0) {
-            account.credit(balancer);
-        }
-        return account;
+        return this.mapToAccountDomain(accountData);
+    }
+
+    async findManyById(ids: string[]): Promise<Account[]> {
+        const accountsData = await this.repository.find({ 
+            where: { id: In(ids) }
+        }); 
+        const accounts = accountsData.map(accountData => {
+            return this.mapToAccountDomain(accountData);
+        })
+        return accounts;
     }
 
     async save(account: Account): Promise<void> {
         await this.repository.save({
-            _id: account.id,
+            id: account.id,
             client_id: account.clientId,
             balance: account.balancer,
             createdAt: account.createdAt,
@@ -45,7 +42,19 @@ export class AccountRepositoryDatabase implements AccountRepository {
             .createQueryBuilder()
             .update('accounts')
             .set({ balance: account.balancer })
-            .where("_id = :id", {id: account.id})
+            .where("id = :id", {id: account.id})
             .execute();
+    }
+
+    private mapToAccountDomain(accountData:AccountEntityOrm): Account {
+        const account = new Account({
+            id: accountData.id,
+            clientId: accountData.client_id,
+            createdAt: accountData.createdAt,
+            updatedAt: accountData.updatedAt
+        });
+        let balancer = parseInt(accountData.balance.toString());
+        account.credit(balancer);
+        return account;
     }
 }

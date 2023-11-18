@@ -11,7 +11,7 @@ async function main() {
         const dataSource = await AppDataSource.initialize();
         const eventDispatcher = new EventDispatcher();
         const repositoryFactory = new RepositoryFactory(dataSource);
-        const usecaseFactory = new UsecaseFactory(repositoryFactory, eventDispatcher);
+        const usecaseFactory = new UsecaseFactory(repositoryFactory, eventDispatcher, dataSource);
         const httpServer = new ExpressAdapter();
         new HttpControllerWalletCore(httpServer, usecaseFactory);
         httpServer.listen(3031);

@@ -5,13 +5,12 @@ export class CreateTableAccount1699142672507 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
             CREATE TABLE accounts (
-                id VARCHAR PRIMARY KEY,
-                _id UUID UNIQUE,
+                id UUID PRIMARY KEY,
                 client_id UUID NOT NULL,
                 balancer int,
                 created_at TIMESTAMP NOT NULL DEFAULT now(),
                 updated_at TIMESTAMP NOT NULL DEFAULT now(),
-                FOREIGN KEY (client_id) REFERENCES clients (_id)
+                FOREIGN KEY (client_id) REFERENCES clients (id)
             );
         `);
     }

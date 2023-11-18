@@ -11,9 +11,9 @@ export class ClientRepositoryDatabase implements ClientRepository {
     }
     
     async findById(id: string): Promise<Client> {
-        const clientData = await this.repository.findOne({ where: { _id: id } }); 
+        const clientData = await this.repository.findOne({ where: { id } }); 
         return new Client({
-            id: clientData._id,
+            id: clientData.id,
             name: clientData.name,
             email: clientData.email,
             createdAt: clientData.createdAt,
@@ -23,7 +23,7 @@ export class ClientRepositoryDatabase implements ClientRepository {
 
     async save(client: Client): Promise<void> {
         await this.repository.save({
-            _id: client.id,
+            id: client.id,
             name: client.name,
             email: client.email,
             createdAt: client.createdAt,

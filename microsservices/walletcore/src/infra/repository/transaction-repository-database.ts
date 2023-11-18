@@ -12,10 +12,10 @@ export class TransactionRepositoryDatabase implements TransactionRepository {
     }
 
     async findById(id: string): Promise<Transaction> {
-        const transactionData = await this.repository.findOne({ where: { _id: id } });
+        const transactionData = await this.repository.findOne({ where: { id } });
 
         return new Transaction({
-            id: transactionData._id,
+            id: transactionData.id,
             accountFromId: transactionData.accountFrom_id,
             accountToId: transactionData.accountTo_id,
             amount: transactionData.amount,
@@ -25,7 +25,7 @@ export class TransactionRepositoryDatabase implements TransactionRepository {
     
     async save(transaction: Transaction): Promise<void> {
         await this.repository.save({
-            _id: transaction.id,
+            id: transaction.id,
             accountFrom_id: transaction.accountFromId,
             accountTo_id: transaction.accountToId,
             amount: transaction.amount,
